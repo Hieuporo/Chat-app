@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html *::-webkit-scrollbar {
+  border-radius: 0;
+  width: 8px;
+}
+html *::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(22, 24, 35, 0.18);
+}
+html *::-webkit-scrollbar-track {
+  border-radius: 0;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.register-container {
+  @apply bg-[url('./background/bg.jpg')] bg-no-repeat bg-cover bg-center h-screen;
+}
+
+.logo {
+  @apply bg-[url('./assets/logo.png')] bg-no-repeat bg-cover bg-center w-56;
+}
+
+.input-form {
+  @apply min-w-[180px] lg:w-60 ml-2;
+}
+
+.ant-submit-btn {
+  @apply font-medium;
+}
+
+.ant-submit-btn:hover {
+  @apply text-white;
+}
+
+.ant-list-item.ant-ui {
+  display: none;
+}
+
+/* Mặc định ẩn thanh bar */
+.sidebar {
+  transform: translateX(-100%);
+}
+
+/* Hiện thanh bar */
+.sidebar--open {
+  transform: translateX(0);
+}
+
+/* Thêm hiệu ứng chuyển động với thuộc tính transition */
+.sidebar {
+  transition: transform 0.3s ease-in-out;
+}
+
+.ant-list-empty-text {
+  display: none;
+}
+
+.chat .ant-upload-list-item-actions {
+  display: none;
+}
