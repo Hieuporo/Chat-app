@@ -36,7 +36,8 @@ const ChatBox = ({ showChatDetail, setShowChatDetail }) => {
   };
 
   const sendMessage = async () => {
-    if (!newMessage) {
+    if (newMessage.trim().length === 0) {
+      setNewMessage("");
       return;
     }
 
