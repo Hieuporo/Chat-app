@@ -3,11 +3,11 @@ import React from "react";
 import { ChatState } from "../context/ChatProvider";
 
 const UserItem = () => {
-  const { user, selectedChat } = ChatState();
+  const { selectedChat } = ChatState();
   return (
     <>
       {selectedChat.users.map((user, key) => (
-        <div className="flex mb-2 cursor-pointer">
+        <div className="flex mb-2 cursor-pointer" key={key}>
           <Avatar src={user.avatar} className="w-12 h-12" />
           <div className="ml-4">
             <div className="font-medium text-base">{user.name}</div>

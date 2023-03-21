@@ -3,14 +3,12 @@ import MyChats from "../components/MyChats";
 import SingleChat from "../components/SingleChat";
 import NavigationBar from "../components/NavigationBar";
 import { ChatState } from "../context/ChatProvider";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Home = () => {
   const { user } = ChatState();
   const [page, setPage] = useState("chat");
   const [fetchAllData, setFetchAllData] = useState(false);
-
-  console.log(fetchAllData);
 
   return (
     <div>
@@ -25,7 +23,7 @@ const Home = () => {
                 setFetchAllData={setFetchAllData}
               />
               <SingleChat
-                fetchAllDat={fetchAllData}
+                fetchAllData={fetchAllData}
                 setFetchAllData={setFetchAllData}
               />
             </>

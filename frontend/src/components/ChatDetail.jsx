@@ -1,23 +1,21 @@
-import { Avatar, Button, Collapse, Input, Modal } from "antd";
+import { Avatar, Collapse } from "antd";
 import { CaretUpOutlined } from "@ant-design/icons";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { getSender, getSenderFull } from "../config/handleLogic";
 import { ChatState } from "../context/ChatProvider";
 import DetailItem from "./DetailItem";
-import {
-  AddUserIcon,
-  DocumentIcon,
-  LeaveGroupIcon,
-  MsgIcon,
-  PhotoIcon,
-  RemoveUserIcon,
-} from "./Icons";
+import { DocumentIcon, LeaveGroupIcon, PhotoIcon } from "./Icons";
 
 import UserItem from "./UserItem";
-import ModalItem from "./ModalItem";
+import ChangeChatName from "./GroupSetting/ChangeChatName";
+import ChangePhoto from "./GroupSetting/ChangePhoto";
+import AddMember from "./GroupSetting/AddMember";
+import RemoveMember from "./GroupSetting/RemoveMember";
 
-const ChatDetail = ({ showChatDetail }) => {
-  const { user, selectedChat } = ChatState();
+const ChatDetail = ({ showChatDetail, fetchAllData, setFetchAllData }) => {
+  const { user, selectedChat, setSelectedChat } = ChatState();
+
+  useEffect(() => {}, [selectedChat]);
 
   if (!selectedChat) {
     return;
@@ -70,31 +68,18 @@ const ChatDetail = ({ showChatDetail }) => {
               key="1"
               className="text-base font-semibold"
             >
-              <ModalItem icon={<MsgIcon />} title="Change chat name">
-                <h3 className="text-center text-2xl font-semibold">
-                  Change chat name
-                </h3>
-                <div className="mt-6">
-                  <h2 className="mb-2">
-                    Changing the name of a group chat changes it for everyone.
-                  </h2>
-                  <Input className="h-14"></Input>
-                  <div className="flex justify-end border-none mt-4">
-                    <Button>Close</Button>
-                    <Button className="ml-2 bg-blue-500 text-white hover:opacity-70 active:text-black">
-                      Save
-                    </Button>
-                  </div>
-                </div>
-              </ModalItem>
-
-              <ModalItem icon={<PhotoIcon />} title="Change photo">
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-              </ModalItem>
+              {/* Change chat name */}
+              <ChangeChatName
+                setFetchAllData={setFetchAllData}
+                setSelectedChat={setSelectedChat}
+                fetchAllData={fetchAllData}
+              />
+              {/* change group image */}
+              <ChangePhoto
+                setFetchAllData={setFetchAllData}
+                setSelectedChat={setSelectedChat}
+                fetchAllData={fetchAllData}
+              />
             </Collapse.Panel>
           )}
           {selectedChat.isGroupChat && (
@@ -103,20 +88,10 @@ const ChatDetail = ({ showChatDetail }) => {
               className="text-base font-semibold"
               key="2"
             >
-              <ModalItem icon={<AddUserIcon />} title="Add member">
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-              </ModalItem>
-              <ModalItem icon={<RemoveUserIcon />} title="Remove member">
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-              </ModalItem>
+              {/* add member */}
+              <AddMember />
+              {/* remove member */}
+              <RemoveMember />
             </Collapse.Panel>
           )}
           {selectedChat.isGroupChat && (

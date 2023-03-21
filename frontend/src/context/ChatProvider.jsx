@@ -18,6 +18,7 @@ const ChatProvider = ({ children }) => {
     } else {
       navigate("/");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchUserData]);
 
   return (

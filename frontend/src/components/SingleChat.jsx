@@ -3,7 +3,7 @@ import { ChatState } from "../context/ChatProvider";
 import ChatBox from "./ChatBox";
 import ChatDetail from "./ChatDetail";
 
-const SingleChat = () => {
+const SingleChat = ({ fetchAllData, setFetchAllData }) => {
   const [showChatDetail, setShowChatDetail] = useState(true);
   const { selectedChat } = ChatState();
   return (
@@ -14,7 +14,11 @@ const SingleChat = () => {
             showChatDetail={showChatDetail}
             setShowChatDetail={setShowChatDetail}
           />
-          <ChatDetail showChatDetail={showChatDetail} />
+          <ChatDetail
+            fetchAllData={fetchAllData}
+            setFetchAllData={setFetchAllData}
+            showChatDetail={showChatDetail}
+          />
         </div>
       )}
     </>

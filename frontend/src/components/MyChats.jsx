@@ -1,12 +1,12 @@
-import { Avatar, Modal } from "antd";
+import { Avatar } from "antd";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { ChatState } from "../context/ChatProvider";
 import { getSender, getSenderFull } from "../config/handleLogic";
 import CreateGroup from "./CreateGroup";
 
 const MyChats = ({ fetchAllData, setFetchAllData }) => {
-  const { user, setSelectedChat, selectedChat, chats, setChats } = ChatState();
+  const { user, setSelectedChat, chats, setChats } = ChatState();
 
   const getListChat = async () => {
     try {
@@ -25,6 +25,7 @@ const MyChats = ({ fetchAllData, setFetchAllData }) => {
 
   useEffect(() => {
     getListChat();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchAllData]);
 
   return (
@@ -38,6 +39,7 @@ const MyChats = ({ fetchAllData, setFetchAllData }) => {
       </div>
       <div>
         {chats &&
+          // eslint-disable-next-line
           chats.map((chat, key) => {
             if (chat.latestMessage || chat.isGroupChat) {
               return (

@@ -7,7 +7,6 @@ const UserList = ({ searchResult, handleGroup, chatAccess }) => {
   const { setSelectedChat, user } = ChatState();
 
   const accessChat = async (userInfo) => {
-    console.log(userInfo);
     const config = {
       headers: {
         Authorization: `Bearer ${user.token}`,

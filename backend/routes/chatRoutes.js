@@ -18,7 +18,7 @@ router.route("/").get(getChats);
 router.route("/accessChat").post(accessChat);
 router.route("/group").post(createGroupChat);
 router.route("/rename").patch(renameGroup);
-router.route("/removeMember").delete(removeFormGroup);
+router.route("/removeMember").patch(removeFormGroup);
 router.route("/addMember").patch(addToGroup);
 router.route("/changeAvatar").patch(changeGroupAvatar);
 module.exports = router;

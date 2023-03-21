@@ -35,23 +35,12 @@ html *::-webkit-scrollbar-track {
   @apply text-white;
 }
 
+.ant-btn-primary {
+  @apply bg-[#1B74E4];
+}
+
 .ant-list-item.ant-ui {
   display: none;
-}
-
-/* Mặc định ẩn thanh bar */
-.sidebar {
-  transform: translateX(-100%);
-}
-
-/* Hiện thanh bar */
-.sidebar--open {
-  transform: translateX(0);
-}
-
-/* Thêm hiệu ứng chuyển động với thuộc tính transition */
-.sidebar {
-  transition: transform 0.3s ease-in-out;
 }
 
 .ant-list-empty-text {

@@ -1,10 +1,9 @@
-import { UploadOutlined } from "@ant-design/icons";
-import { Button, Input, message, Modal, notification, Upload } from "antd";
+import { Button, Input, Modal, notification, Upload } from "antd";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ChatState } from "../context/ChatProvider";
 import BadgeUser from "./BadgeUser";
-import { GroupIcon, PhotoIcon, PhotoIconBig } from "./Icons";
+import { GroupIcon, PhotoIconBig } from "./Icons";
 import UserList from "./UserList";
 
 const CreateGroup = ({ setFetchAllData, fetchAllData }) => {
@@ -21,8 +20,7 @@ const CreateGroup = ({ setFetchAllData, fetchAllData }) => {
 
   const handleAvatar = (file) => {
     const pics = file.file;
-    console.log(file);
-    console.log(file.fileList);
+
     if (pics.status === "removed") {
       return;
     }
@@ -65,6 +63,7 @@ const CreateGroup = ({ setFetchAllData, fetchAllData }) => {
     setSearchResult([]);
     setGroupChatName("");
     setSelectedUsers([]);
+    setFileList([]);
   };
   const handleCancel = () => {
     setIsModalOpen(false);

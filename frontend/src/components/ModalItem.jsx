@@ -1,16 +1,15 @@
 import { Modal } from "antd";
-import React, { useState } from "react";
+import React from "react";
 import DetailItem from "./DetailItem";
 
-const ModalItem = ({ children, icon, title }) => {
-  const [open, setOpen] = useState(false);
-  const showModal = () => {
-    setOpen(true);
-  };
-  const handleCancel = () => {
-    setOpen(false);
-  };
-
+const ModalItem = ({
+  children,
+  icon,
+  title,
+  showModal,
+  handleCancel,
+  open,
+}) => {
   return (
     <div>
       <div onClick={showModal}>

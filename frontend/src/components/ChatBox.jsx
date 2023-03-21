@@ -91,6 +91,7 @@ const ChatBox = ({ showChatDetail, setShowChatDetail }) => {
 
   useEffect(() => {
     fetchChatData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedChat]);
 
   return (
@@ -228,6 +229,7 @@ const ChatBox = ({ showChatDetail, setShowChatDetail }) => {
           placeholder="Aa"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
+          onPressEnter={sendMessage}
         />
 
         {/* Send icon */}

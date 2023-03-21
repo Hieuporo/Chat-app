@@ -1,4 +1,5 @@
 const Chat = require("../models/chatModel");
+const User = require("../models/userModel");
 const { BadRequestError, NotFoundError } = require("../errors/index");
 const { StatusCodes } = require("http-status-codes");
 const mongoose = require("mongoose");
@@ -93,7 +94,9 @@ module.exports.renameGroup = async (req, res) => {
     throw new BadRequestError("Please provide all fields");
   }
 
-  const group = await Chat.findOne({ _id: chatId, isGroupChat: true });
+  const group = await Chat.findOne({ _id: chatId, isGroupChat: true })
+    .populate("users", "name avatar email")
+    .populate("users", "name avatar email");
 
   if (!group) {
     throw new NotFoundError("Can not find this chat");
@@ -112,7 +115,10 @@ module.exports.changeGroupAvatar = async (req, res) => {
     throw new BadRequestError("Please provide all fields");
   }
 
-  const group = await Chat.findOne({ _id: chatId, isGroupChat: true });
+  const group = await Chat.findOne({ _id: chatId, isGroupChat: true }).populate(
+    "users",
+    "name avatar email"
+  );
 
   if (!group) {
     throw new NotFoundError("Can not find this chat");
@@ -131,7 +137,18 @@ module.exports.removeFormGroup = async (req, res) => {
     throw new BadRequestError("Please provide all fields");
   }
 
-  const chat = await Chat.findOne({ _id: chatId, groupAdmin: req.user._id });
+  const chat = await Chat.findOne({
+    _id: chatId,
+    groupAdmin: req.user._id,
+  }).populate("users", "name avatar email");
+
+  const filterUser = chat.users.filter((user) =>
+    user._id.equals(new mongoose.Types.ObjectId(userId))
+  );
+
+  if (filterUser.length === 0) {
+    throw new BadRequestError("User is not in this group");
+  }
 
   if (!chat) {
     throw new NotFoundError("Something went wrong!");
@@ -145,7 +162,7 @@ module.exports.removeFormGroup = async (req, res) => {
 
   chat.save();
 
-  res.sendStatus(StatusCodes.NO_CONTENT);
+  res.status(StatusCodes.OK).json(chat);
 };
 module.exports.addToGroup = async (req, res) => {
   const { userId, chatId } = req.body;
@@ -153,13 +170,30 @@ module.exports.addToGroup = async (req, res) => {
     throw new BadRequestError("Please provide all fields");
   }
 
-  const chat = await Chat.findOne({ _id: chatId, groupAdmin: req.user._id });
+  const chat = await Chat.findOne({
+    _id: chatId,
+    groupAdmin: req.user._id,
+  }).populate("users", "name email avatar");
+
+  const filterUser = chat.users.filter((user) =>
+    user._id.equals(new mongoose.Types.ObjectId(userId))
+  );
+
+  if (filterUser.length > 0) {
+    throw new BadRequestError("User already in chat");
+  }
+
+  const userAdd = await User.findOne({ _id: userId });
+
+  if (!userAdd) {
+    throw new NotFoundError("Cant find this user");
+  }
 
   if (!chat) {
     throw new NotFoundError("Something went wrong!");
   }
 
-  chat.users.push(userId);
+  chat.users.push(userAdd);
 
   chat.save();
 
