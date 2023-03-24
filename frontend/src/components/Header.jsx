@@ -1,21 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
+  Badge,
   Button,
   Drawer,
   Dropdown,
   Input,
-  Modal,
+  List,
   notification,
+  Popover,
 } from "antd";
 import { ChatState } from "../context/ChatProvider";
 import ProfileModal from "./ProfileModal";
 import LoadingInfo from "./LoadingInfo";
 import UserList from "./UserList";
 import axios from "axios";
+import { getSender } from "../config/handleLogic";
 
 const Header = () => {
-  const { user } = ChatState();
+  const { user, notify, setNotify } = ChatState();
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -68,6 +71,24 @@ const Header = () => {
     },
   ];
 
+  const content = (
+    <List
+      dataSource={notify}
+      renderItem={(notify) => (
+        <List.Item>
+          <div className="font-semibold">
+            You have a new message from{" "}
+            {notify.chat.isGroupChat
+              ? notify.chat.chatName
+              : getSender(user, notify.chat.users)}
+          </div>
+        </List.Item>
+      )}
+    />
+  );
+
+  useEffect(() => {}, [notify]);
+
   return (
     <div className="h-14 w-screen flex justify-between shadow-xl">
       <div className="w-14 h-14 flex items-center justify-center hover:text-gray-500 cursor-pointer">
@@ -106,22 +127,34 @@ const Header = () => {
 
       <div className="logo"></div>
 
+      {/* notify */}
       <div className="flex items-center justify-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6 cursor-pointer"
+        <Popover content={content} title="Notifications" trigger="click">
+          <Badge count={notify.length}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6 cursor-pointer"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
+              />
+            </svg>
+          </Badge>
+        </Popover>
+
+        <Dropdown
+          menu={{
+            items,
+          }}
+          placement="bottomRight"
+          overlayClassName
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
-          />
-        </svg>
-        <Dropdown menu={{ items }} placement="bottomRight" overlayClassName>
           <div>
             <Avatar
               size="large"

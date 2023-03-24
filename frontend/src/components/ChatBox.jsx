@@ -10,11 +10,25 @@ import {
 } from "../config/handleLogic";
 import axios from "axios";
 import ScrollableFeed from "react-scrollable-feed";
+import socket from "../config/socket";
 
-const ChatBox = ({ showChatDetail, setShowChatDetail }) => {
-  const { user, selectedChat, chats, setChats } = ChatState();
-  const [chatData, setChatData] = useState();
+let currentChat;
+
+const ChatBox = ({
+  showChatDetail,
+  setShowChatDetail,
+  fetchAllData,
+  setFetchAllData,
+}) => {
+  const { user, selectedChat, chats, setChats, notify, setNotify } =
+    ChatState();
+  const [chatData, setChatData] = useState([]);
   const [newMessage, setNewMessage] = useState();
+
+  useEffect(() => {
+    socket.emit("setup", user);
+    socket.on("connected", () => console.log("connected"));
+  }, []);
 
   const fetchChatData = async () => {
     try {
@@ -30,8 +44,9 @@ const ChatBox = ({ showChatDetail, setShowChatDetail }) => {
       );
 
       setChatData(data);
+      socket.emit("joinRoom", selectedChat._id);
     } catch (err) {
-      console.log(err.response.data.msg);
+      console.log(err);
     }
   };
 
@@ -57,6 +72,9 @@ const ChatBox = ({ showChatDetail, setShowChatDetail }) => {
         config
       );
 
+      socket.emit("sendNewMessage", data);
+
+      //update latestmessage in chats
       data.chat.latestMessage = data;
 
       let index;
@@ -90,9 +108,39 @@ const ChatBox = ({ showChatDetail, setShowChatDetail }) => {
   };
 
   useEffect(() => {
-    fetchChatData();
+    currentChat = selectedChat;
+    if (selectedChat) {
+      fetchChatData();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedChat]);
+
+  useEffect(() => {
+    socket.on("newMessage", (newMessage) => {
+      if (!currentChat || currentChat._id !== newMessage.chat._id) {
+        console.log({
+          selectedChat,
+          newMessage,
+        });
+
+        setFetchAllData(!fetchAllData);
+
+        const check = notify.filter(
+          (nofi) => nofi.chat._id === newMessage.chat._id
+        );
+
+        if (check.length === 0) {
+          setNotify([...notify, newMessage]);
+        }
+      } else {
+        setChatData([...chatData, newMessage]);
+      }
+    });
+  });
+
+  if (!selectedChat) {
+    return <div>Momotaro</div>;
+  }
 
   return (
     <div

@@ -5,6 +5,7 @@ import ModalItem from "../ModalItem";
 import UserList from "../UserList";
 import axios from "axios";
 import { ChatState } from "../../context/ChatProvider";
+import socket from "../../config/socket";
 
 const AddMember = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -43,6 +44,13 @@ const AddMember = () => {
   };
 
   const handleGroup = async (userInfo) => {
+    if (selectedChat.groupAdmin !== user._id) {
+      notification.error({
+        message: "Only admin can do this",
+      });
+      return;
+    }
+
     const config = {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -55,8 +63,9 @@ const AddMember = () => {
         { chatId: selectedChat._id, userId: userInfo._id },
         config
       );
-
+      socket.emit("addUser", userInfo._id);
       setSelectedChat(data);
+      // out modal
       handleCancel();
 
       notification.success({

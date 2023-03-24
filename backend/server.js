@@ -11,6 +11,7 @@ const userRoutes = require("./routes/userRoutes");
 const friendRoutes = require("./routes/friendRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
+const { newMessage } = require("./controllers/messageControler");
 
 const app = express();
 
@@ -31,15 +32,44 @@ app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 5000;
 
-const start = async () => {
-  try {
-    await connectDB(process.env.MONGO_URL);
-    app.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
+connectDB();
 
-start();
+const server = app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
+const io = require("socket.io")(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("connected to socket.io");
+
+  socket.on("setup", (userData) => {
+    socket.join(userData._id);
+    socket.emit("connected");
+  });
+
+  socket.on("joinRoom", (room) => {
+    socket.join(room);
+  });
+
+  socket.on("sendNewMessage", (newMessage) => {
+    newMessage.chat.users.map((user) => {
+      if (user._id == newMessage.sender._id) return;
+      socket.in(user._id).emit("newMessage", newMessage);
+    });
+  });
+
+  socket.on("addUser", (id) => {
+    socket.in(id).emit("fetchChats");
+  });
+
+  socket.on("removeUser", (id) => {
+    console.log(id);
+    socket.in(id).emit("fetchChats");
+  });
+});

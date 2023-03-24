@@ -5,6 +5,7 @@ import { ChatState } from "../../context/ChatProvider";
 import { RemoveUserIcon } from "../Icons";
 import ModalItem from "../ModalItem";
 import UserList from "../UserList";
+import socket from "../../config/socket";
 
 const RemoveMember = () => {
   const { selectedChat, setSelectedChat, user } = ChatState();
@@ -18,6 +19,20 @@ const RemoveMember = () => {
   };
 
   const handleGroup = async (userInfo) => {
+    if (selectedChat.groupAdmin !== user._id) {
+      notification.error({
+        message: "Only admin can do this",
+      });
+      return;
+    }
+
+    if (userInfo._id === user._id) {
+      notification.error({
+        message: "You can't remove yourself",
+      });
+      return;
+    }
+
     const config = {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -31,6 +46,8 @@ const RemoveMember = () => {
         config
       );
 
+      socket.emit("removeUser", userInfo._id);
+
       setSelectedChat(data);
       handleCancel();
 
@@ -41,6 +58,7 @@ const RemoveMember = () => {
       console.log(error);
     }
   };
+
   return (
     <ModalItem
       icon={<RemoveUserIcon />}

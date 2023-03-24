@@ -4,9 +4,11 @@ import React, { useEffect } from "react";
 import { ChatState } from "../context/ChatProvider";
 import { getSender, getSenderFull } from "../config/handleLogic";
 import CreateGroup from "./CreateGroup";
+import socket from "../config/socket";
 
 const MyChats = ({ fetchAllData, setFetchAllData }) => {
-  const { user, setSelectedChat, chats, setChats } = ChatState();
+  const { user, setSelectedChat, chats, setChats, notify, setNotify } =
+    ChatState();
 
   const getListChat = async () => {
     try {
@@ -23,10 +25,22 @@ const MyChats = ({ fetchAllData, setFetchAllData }) => {
     }
   };
 
+  const handleChat = (chat) => {
+    const newNotify = notify.filter((noti) => noti.chat._id !== chat._id);
+    setNotify(newNotify);
+    setSelectedChat(chat);
+  };
+
   useEffect(() => {
     getListChat();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchAllData]);
+
+  useEffect(() => {
+    socket.on("fetchChats", () => {
+      getListChat();
+    });
+  });
 
   return (
     <div className="basis-96 h-vh overflow-auto pl-3">
@@ -46,7 +60,7 @@ const MyChats = ({ fetchAllData, setFetchAllData }) => {
                 <div
                   className="flex mt-4 cursor-pointer"
                   key={key}
-                  onClick={() => setSelectedChat(chat)}
+                  onClick={() => handleChat(chat)}
                 >
                   {chat.isGroupChat ? (
                     <Avatar src={chat.chatAvatar} className="w-14 h-14" />
