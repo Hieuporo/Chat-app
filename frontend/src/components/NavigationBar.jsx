@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ChatState } from "../context/ChatProvider";
 const NavigationBar = ({ setPage }) => {
-  const { setSelectedChat, setChats, setUser } = ChatState();
+  const { setSelectedChat, setChats, setUser, setNotify } = ChatState();
   const navigate = useNavigate();
 
   const logoutUser = () => {
@@ -10,6 +10,7 @@ const NavigationBar = ({ setPage }) => {
     setSelectedChat();
     setUser();
     setChats([]);
+    setNotify([]);
     navigate("/");
   };
 

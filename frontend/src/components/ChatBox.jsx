@@ -28,6 +28,7 @@ const ChatBox = ({
   useEffect(() => {
     socket.emit("setup", user);
     socket.on("connected", () => console.log("connected"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchChatData = async () => {
@@ -139,14 +140,11 @@ const ChatBox = ({
   });
 
   if (!selectedChat) {
-    return <div>Momotaro</div>;
+    return <div className="w-[705px]">Momotaro</div>;
   }
 
   return (
-    <div
-      className="relative"
-      style={{ width: showChatDetail ? "66.666%" : "100%" }}
-    >
+    <div className={"relative w-[705px]"}>
       {selectedChat && (
         <div className="w-full h-14 flex pl-2 mt-3 border-b shadow-lg">
           {selectedChat.isGroupChat ? (

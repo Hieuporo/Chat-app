@@ -55,6 +55,7 @@ module.exports.getFriendList = async (req, res) => {
         _id: 1,
         email: 1,
         avatar: 1,
+        name: 1,
       },
     },
   ]);

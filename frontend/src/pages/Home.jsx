@@ -4,6 +4,7 @@ import SingleChat from "../components/SingleChat";
 import NavigationBar from "../components/NavigationBar";
 import { ChatState } from "../context/ChatProvider";
 import { useState } from "react";
+import ListFriend from "../components/ListFriend";
 
 const Home = () => {
   const { user } = ChatState();
@@ -28,6 +29,7 @@ const Home = () => {
               />
             </>
           )}
+          <ListFriend />
         </div>
       )}
     </div>

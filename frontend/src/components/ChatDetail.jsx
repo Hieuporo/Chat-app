@@ -23,7 +23,7 @@ const ChatDetail = ({ showChatDetail, fetchAllData, setFetchAllData }) => {
 
   return (
     <div
-      className="flex-1 flex flex-col overflow-auto"
+      className="flex-1 flex flex-col overflow-auto bg-white"
       style={{ display: showChatDetail ? "flex" : "none" }}
     >
       <div className="mt-10 w-full h-40 block">

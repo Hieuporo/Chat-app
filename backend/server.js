@@ -49,8 +49,23 @@ io.on("connection", (socket) => {
   console.log("connected to socket.io");
 
   socket.on("setup", (userData) => {
+    socket.data.userId = userData._id;
     socket.join(userData._id);
     socket.emit("connected");
+  });
+
+  const interval = setInterval(() => {
+    if (socket.data.userId) {
+      const userId = socket.data.userId;
+      console.log(`userId : ${userId}`);
+      io.emit("isOnline", userId);
+    }
+  }, 3000);
+
+  socket.on("disconnect", () => {
+    const userId = socket.data.userId;
+    io.emit("userDisconnected", userId);
+    clearInterval(interval);
   });
 
   socket.on("joinRoom", (room) => {
@@ -69,7 +84,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("removeUser", (id) => {
-    console.log(id);
     socket.in(id).emit("fetchChats");
   });
 });

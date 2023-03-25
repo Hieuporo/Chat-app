@@ -18,7 +18,7 @@ import axios from "axios";
 import { getSender } from "../config/handleLogic";
 
 const Header = () => {
-  const { user, notify, setNotify } = ChatState();
+  const { user, notify } = ChatState();
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState([]);

@@ -40,6 +40,9 @@ const MyChats = ({ fetchAllData, setFetchAllData }) => {
     socket.on("fetchChats", () => {
       getListChat();
     });
+    socket.on("online", (id) => {
+      socket.emit("isOnline", id);
+    });
   });
 
   return (
