@@ -29,7 +29,12 @@ const ChatBox = ({
     socket.emit("setup", user);
     socket.on("connected", () => console.log("connected"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+    return () => {
+      console.log("ngat ket noi");
+      socket.disconnect();
+    };
+  }, [user]);
 
   const fetchChatData = async () => {
     try {
@@ -140,13 +145,19 @@ const ChatBox = ({
   });
 
   if (!selectedChat) {
-    return <div className="w-[705px]">Momotaro</div>;
+    return (
+      <div className="flex justify-center items-center w-full">
+        <div>
+          <p className="text-4xl font-thin">Please choose a chat to start</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className={"relative w-[705px]"}>
+    <div className={`relative ${!showChatDetail ? "w-full" : "w-ws"} pr-2`}>
       {selectedChat && (
-        <div className="w-full h-14 flex pl-2 mt-3 border-b shadow-lg">
+        <div className="w-full h-14 flex pl-2 mt-3 border-b shadow-sm">
           {selectedChat.isGroupChat ? (
             <div className="w-14 h-14">
               <Avatar src={selectedChat.chatAvatar} className="w-14 h-14" />

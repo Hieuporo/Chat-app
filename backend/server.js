@@ -60,7 +60,7 @@ io.on("connection", (socket) => {
       console.log(`userId : ${userId}`);
       io.emit("isOnline", userId);
     }
-  }, 3000);
+  }, 1000);
 
   socket.on("disconnect", () => {
     const userId = socket.data.userId;
@@ -85,5 +85,17 @@ io.on("connection", (socket) => {
 
   socket.on("removeUser", (id) => {
     socket.in(id).emit("fetchChats");
+  });
+
+  socket.on("fetchFriend", (id) => {
+    socket.in(id).emit("fetchFriendList");
+  });
+
+  socket.on("fetchRequests", (id) => {
+    socket.in(id).emit("fetchRequestList");
+  });
+
+  socket.on("fetchInvites", (id) => {
+    socket.in(id).emit("fetchInviteList");
   });
 });

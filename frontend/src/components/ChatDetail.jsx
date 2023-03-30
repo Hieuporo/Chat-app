@@ -1,19 +1,47 @@
-import { Avatar, Collapse } from "antd";
+import { Avatar, Collapse, notification } from "antd";
 import { CaretUpOutlined } from "@ant-design/icons";
 import React, { useEffect } from "react";
-import { getSender, getSenderFull } from "../config/handleLogic";
+import {
+  getInvite,
+  getRequest,
+  getSender,
+  getSenderFull,
+  inThisList,
+  inThisRequests,
+} from "../config/handleLogic";
 import { ChatState } from "../context/ChatProvider";
 import DetailItem from "./DetailItem";
-import { DocumentIcon, LeaveGroupIcon, PhotoIcon } from "./Icons";
+import {
+  DocumentIcon,
+  LeaveGroupIcon,
+  PhotoIcon,
+  RemoveUserIcon,
+} from "./Icons";
 
 import UserItem from "./UserItem";
 import ChangeChatName from "./GroupSetting/ChangeChatName";
 import ChangePhoto from "./GroupSetting/ChangePhoto";
 import AddMember from "./GroupSetting/AddMember";
 import RemoveMember from "./GroupSetting/RemoveMember";
+import axios from "axios";
+import socket from "../config/socket";
+import IsFriend from "./FriendSetting/IsFriend";
+import AddFriend from "./FriendSetting/AddFriend";
+import InviteFriend from "./FriendSetting/InviteFriend";
+import CancelRequest from "./FriendSetting/CancelRequest";
 
 const ChatDetail = ({ showChatDetail, fetchAllData, setFetchAllData }) => {
-  const { user, selectedChat, setSelectedChat } = ChatState();
+  const {
+    user,
+    selectedChat,
+    setSelectedChat,
+    invites,
+    requests,
+    setInvites,
+    setFetchFriendList,
+    fetchFriendList,
+    friendList,
+  } = ChatState();
 
   useEffect(() => {}, [selectedChat]);
 
@@ -23,7 +51,7 @@ const ChatDetail = ({ showChatDetail, fetchAllData, setFetchAllData }) => {
 
   return (
     <div
-      className="flex-1 flex flex-col overflow-auto bg-white"
+      className="w-[353px] flex flex-col overflow-auto bg-white"
       style={{ display: showChatDetail ? "flex" : "none" }}
     >
       <div className="mt-10 w-full h-40 block">
@@ -44,8 +72,44 @@ const ChatDetail = ({ showChatDetail, fetchAllData, setFetchAllData }) => {
             {selectedChat.chatName}
           </div>
         ) : (
-          <div className="text-center font-medium text-lg">
-            {getSender(user, selectedChat.users)}
+          <div>
+            <div className="text-center font-medium text-lg">
+              {getSender(user, selectedChat.users)}
+            </div>
+            <div className="flex justify-center">
+              {inThisList(getSenderFull(user, selectedChat.users), invites) && (
+                <div>
+                  <InviteFriend invite={getInvite(user, invites)} />
+                </div>
+              )}
+              {inThisRequests(
+                getSenderFull(user, selectedChat.users),
+                requests
+              ) && <CancelRequest request={getRequest(user, requests)} />}
+              {friendList.some((friend) => {
+                return (
+                  friend._id === getSenderFull(user, selectedChat.users)._id
+                );
+              }) && (
+                <IsFriend
+                  userId={getSenderFull(user, selectedChat.users)._id}
+                />
+              )}
+              {!inThisList(getSenderFull(user, selectedChat.users), invites) &&
+                !inThisRequests(
+                  getSenderFull(user, selectedChat.users),
+                  requests
+                ) &&
+                !friendList.some((friend) => {
+                  return (
+                    friend._id === getSenderFull(user, selectedChat.users)._id
+                  );
+                }) && (
+                  <AddFriend
+                    receiverId={getSenderFull(user, selectedChat.users)._id}
+                  />
+                )}
+            </div>
           </div>
         )}
       </div>

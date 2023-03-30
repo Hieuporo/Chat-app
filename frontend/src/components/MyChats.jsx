@@ -7,8 +7,20 @@ import CreateGroup from "./CreateGroup";
 import socket from "../config/socket";
 
 const MyChats = ({ fetchAllData, setFetchAllData }) => {
-  const { user, setSelectedChat, chats, setChats, notify, setNotify } =
-    ChatState();
+  const {
+    user,
+    setSelectedChat,
+    chats,
+    setChats,
+    notify,
+    setNotify,
+    fetchFriendList,
+    setFetchFriendList,
+    fetchInviteList,
+    setFetchInviteList,
+    fetchRequestList,
+    setFetchRequestList,
+  } = ChatState();
 
   const getListChat = async () => {
     try {
@@ -42,6 +54,15 @@ const MyChats = ({ fetchAllData, setFetchAllData }) => {
     });
     socket.on("online", (id) => {
       socket.emit("isOnline", id);
+    });
+    socket.on("fetchFriendList", () => {
+      setFetchFriendList(!fetchFriendList);
+    });
+    socket.on("fetchRequestList", () => {
+      setFetchInviteList(!fetchInviteList);
+    });
+    socket.on("fetchInviteList", () => {
+      setFetchRequestList(!fetchRequestList);
     });
   });
 

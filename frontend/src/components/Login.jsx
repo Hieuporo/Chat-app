@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ChatState } from "../context/ChatProvider";
 
+import socket from "../config/socket";
+
 const Login = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -37,7 +39,7 @@ const Login = () => {
       );
 
       localStorage.setItem("userInfo", JSON.stringify(data));
-
+      socket.connect();
       notification.success({
         message: "Login Success!",
         description: "Successfully Login. Please wait...",

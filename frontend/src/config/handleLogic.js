@@ -1,3 +1,5 @@
+import { inView } from "framer-motion";
+
 export const isSameSenderMargin = (messages, m, i, userId) => {
   if (
     i < messages.length - 1 &&
@@ -42,4 +44,34 @@ export const getSender = (loggedUser, users) => {
 
 export const getSenderFull = (loggedUser, users) => {
   return users[0]._id === loggedUser._id ? users[1] : users[0];
+};
+
+export const inThisList = (user, invites) => {
+  const result = invites.some((invite) => {
+    return invite.senderId._id === user._id;
+  });
+
+  console.log(result);
+
+  return result ? true : false;
+};
+
+export const inThisRequests = (user, requests) => {
+  const result = requests.some((request) => {
+    return request.receiverId._id === user._id;
+  });
+
+  return result ? true : false;
+};
+
+export const getInvite = (user, invites) => {
+  const result = invites.filter((invite) => invite.receiverId._id === user._id);
+  return result[0];
+};
+
+export const getRequest = (user, requests) => {
+  const result = requests.filter((request) => {
+    return request.senderId._id === user._id;
+  });
+  return result[0];
 };

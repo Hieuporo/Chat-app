@@ -2,7 +2,6 @@ import React from "react";
 import { Tabs } from "antd";
 import Login from "../components/Login";
 import Signup from "../components/Signup";
-
 const Register = () => {
   const items = [
     {

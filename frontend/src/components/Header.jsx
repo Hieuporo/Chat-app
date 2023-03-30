@@ -16,9 +16,18 @@ import LoadingInfo from "./LoadingInfo";
 import UserList from "./UserList";
 import axios from "axios";
 import { getSender } from "../config/handleLogic";
+import { FriendIcon } from "./Icons";
+import socket from "../config/socket";
 
 const Header = () => {
-  const { user, notify } = ChatState();
+  const {
+    user,
+    notify,
+    invites,
+    setInvites,
+    fetchFriendList,
+    setFetchFriendList,
+  } = ChatState();
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -87,6 +96,90 @@ const Header = () => {
     />
   );
 
+  const listRequest = (
+    <div className="w-[360px]">
+      <List
+        dataSource={invites}
+        renderItem={(invite) => (
+          <List.Item>
+            <div className="flex items-center px-2">
+              <div className="h-20 mr-4">
+                <Avatar src={invite.senderId.avatar} className="w-16 h-16" />
+              </div>
+              <div>
+                <div className="mb-3 font-medium text-base">
+                  {invite.senderId.name}
+                </div>
+                <Button
+                  type="primary"
+                  className="w-28"
+                  size="large"
+                  onClick={() => acceptInvite(invite)}
+                >
+                  Confirm
+                </Button>
+                <Button
+                  className="w-28 ml-3 border-none hover:bg-slate-300"
+                  size="large"
+                  onClick={() => rejectInvite(invite)}
+                >
+                  Delete
+                </Button>
+              </div>
+            </div>
+          </List.Item>
+        )}
+      />
+    </div>
+  );
+
+  const acceptInvite = async (invite) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+
+    try {
+      await axios.post(
+        "/api/v1/friend",
+        {
+          userId: invite.senderId._id,
+        },
+        config
+      );
+
+      socket.emit("fetchFriend", invite.senderId._id);
+      setInvites(invites.filter((inv) => inv._id !== invite._id));
+      setFetchFriendList(!fetchFriendList);
+    } catch (error) {
+      notification.error({
+        message: error.response.data.msg,
+      });
+    }
+  };
+
+  const rejectInvite = async (invite) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+
+    try {
+      const { data } = await axios.delete(
+        `/api/v1/friend/invite/delelteRequest/${invite._id}`,
+        config
+      );
+
+      setInvites(invites.filter((inv) => inv._id !== invite._id));
+    } catch (error) {
+      notification.error({
+        message: error.response.data.msg,
+      });
+    }
+  };
+
   useEffect(() => {}, [notify]);
 
   return (
@@ -108,7 +201,13 @@ const Header = () => {
             />
           </svg>
         </Button>
-        <Drawer placement="left" onClose={onClose} open={open}>
+        <Drawer
+          placement="left"
+          width={446}
+          onClose={onClose}
+          open={open}
+          addfriend
+        >
           <div className="h-screen mr-6">
             <div className="flex">
               <Input
@@ -120,7 +219,9 @@ const Header = () => {
               <Button onClick={searchUserList}>Search</Button>
             </div>
             {loading && <LoadingInfo />}
-            {!loading && <UserList searchResult={searchResult} chatAccess />}
+            {!loading && (
+              <UserList searchResult={searchResult} chatAccess addfriend />
+            )}
           </div>
         </Drawer>
       </div>
@@ -129,7 +230,21 @@ const Header = () => {
 
       {/* notify */}
       <div className="flex items-center justify-center">
-        <Popover content={content} title="Notifications" trigger="click">
+        <Popover
+          content={listRequest}
+          title={<div className="text-lg">Friend requests</div>}
+          trigger="click"
+        >
+          <div>
+            <FriendIcon />
+          </div>
+        </Popover>
+        <Popover
+          content={content}
+          title="Notifications"
+          trigger="click"
+          className="ml-8 mr-6"
+        >
           <Badge count={notify.length}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -155,13 +270,11 @@ const Header = () => {
           placement="bottomRight"
           overlayClassName
         >
-          <div>
-            <Avatar
-              size="large"
-              className="mr-4 ml-8 cursor-pointer"
-              src={user.avatar}
-            />
-          </div>
+          <Avatar
+            size="large"
+            className="mr-4 ml-2 cursor-pointer"
+            src={user.avatar}
+          />
         </Dropdown>
       </div>
     </div>

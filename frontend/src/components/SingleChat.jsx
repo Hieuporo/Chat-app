@@ -7,9 +7,7 @@ const SingleChat = ({ fetchAllData, setFetchAllData }) => {
   return (
     <>
       <div
-        className={`flex relative z-50 ${
-          showChatDetail ? "flex-1" : "basis-[705px]"
-        }`}
+        className={`flex relative z-50 ${!showChatDetail ? "w-wd" : "flex-1"}`}
       >
         <ChatBox
           fetchAllData={fetchAllData}

@@ -79,6 +79,7 @@ module.exports.createGroupChat = async (req, res) => {
     path: "users",
     select: "name avatar email",
   });
+
   chat = await Chat.populate(chat, {
     path: "groupAdmin",
     select: "name avatar email",

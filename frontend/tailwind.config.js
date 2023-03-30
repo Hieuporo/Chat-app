@@ -11,6 +11,8 @@ module.exports = {
       },
       width: {
         wf: "calc(100% - 32px)",
+        wd: "calc(100% - 801px)",
+        ws: "calc(100% - 351px)",
       },
     },
   },

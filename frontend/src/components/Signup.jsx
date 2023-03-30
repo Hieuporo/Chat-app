@@ -3,6 +3,7 @@ import { Input, Form, Button, notification, Upload } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ChatState } from "../context/ChatProvider";
+import socket from "../config/socket";
 
 const Signup = () => {
   const [email, setEmail] = useState();
@@ -67,7 +68,7 @@ const Signup = () => {
         { email, password, name, avatar },
         config
       );
-
+      socket.connect();
       localStorage.setItem("userInfo", JSON.stringify(data));
 
       notification.success({

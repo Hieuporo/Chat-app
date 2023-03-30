@@ -25,6 +25,13 @@ module.exports.acceptFriend = async (_id, senderId) => {
   }
 
   const friend = await Friend.create({ userIds: [_id, senderId] });
+
+  if (!friend) {
+    throw new BadRequestError("Something went wrong");
+  }
+
+  // accept and delele request
+
   return friend;
 };
 
