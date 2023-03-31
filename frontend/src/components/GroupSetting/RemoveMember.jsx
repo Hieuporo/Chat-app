@@ -8,7 +8,13 @@ import UserList from "../UserList";
 import socket from "../../config/socket";
 
 const RemoveMember = () => {
-  const { selectedChat, setSelectedChat, user } = ChatState();
+  const {
+    selectedChat,
+    setSelectedChat,
+    user,
+    fetchFriendList,
+    setFetchFriendList,
+  } = ChatState();
   const [open, setOpen] = useState(false);
 
   const showModal = () => {
@@ -47,10 +53,10 @@ const RemoveMember = () => {
       );
 
       socket.emit("removeUser", userInfo._id);
-
+      data.users.forEach((user) => socket.emit("fetchChats", user._id));
+      setFetchFriendList(!fetchFriendList);
       setSelectedChat(data);
       handleCancel();
-
       notification.success({
         message: " Remove successfully",
       });

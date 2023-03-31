@@ -72,9 +72,27 @@ const ChatProvider = ({ children }) => {
   useEffect(() => {
     if (user) {
       fetchInvite();
+    }
+  }, [user, fetchInviteList]);
+
+  useEffect(() => {
+    if (user) {
       fetchRequest();
     }
-  }, [user, fetchInviteList, fetchRequestList]);
+  }, [user, fetchRequestList]);
+
+  useEffect(() => {
+    if (user) {
+      socket.emit("setup", user);
+      socket.on("connected", () => console.log("connected"));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+
+      return () => {
+        console.log("ngat ket noi");
+        socket.disconnect();
+      };
+    }
+  }, [user]);
 
   return (
     <ChatContext.Provider

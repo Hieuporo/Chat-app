@@ -5,6 +5,7 @@ import NavigationBar from "../components/NavigationBar";
 import { ChatState } from "../context/ChatProvider";
 import { useState } from "react";
 import ListFriend from "../components/ListFriend";
+import UserSetting from "../components/UserSetting";
 
 const Home = () => {
   const { user } = ChatState();
@@ -17,7 +18,7 @@ const Home = () => {
       {user && (
         <div className="flex h-vh">
           <NavigationBar setPage={setPage} />
-          {page === "chat" && (
+          {page === "chat" ? (
             <>
               <MyChats
                 fetchAllData={fetchAllData}
@@ -28,6 +29,8 @@ const Home = () => {
                 setFetchAllData={setFetchAllData}
               />
             </>
+          ) : (
+            <UserSetting />
           )}
           <ListFriend />
         </div>

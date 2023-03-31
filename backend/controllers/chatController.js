@@ -104,7 +104,7 @@ module.exports.renameGroup = async (req, res) => {
   }
 
   group.chatName = chatName;
-  group.save();
+  await group.save();
 
   res.status(StatusCodes.OK).json(group);
 };
@@ -126,7 +126,7 @@ module.exports.changeGroupAvatar = async (req, res) => {
   }
 
   group.chatAvatar = chatAvatar;
-  group.save();
+  await group.save();
 
   res.status(StatusCodes.OK).json(group);
 };
@@ -161,7 +161,7 @@ module.exports.removeFormGroup = async (req, res) => {
     }
   });
 
-  chat.save();
+  await chat.save();
 
   res.status(StatusCodes.OK).json(chat);
 };
@@ -196,7 +196,7 @@ module.exports.addToGroup = async (req, res) => {
 
   chat.users.push(userAdd);
 
-  chat.save();
+  await chat.save();
 
   res.status(StatusCodes.OK).json(chat);
 };

@@ -5,6 +5,7 @@ import { ChatState } from "../context/ChatProvider";
 import BadgeUser from "./BadgeUser";
 import { GroupIcon, PhotoIconBig } from "./Icons";
 import UserList from "./UserList";
+import socket from "../config/socket";
 
 const CreateGroup = ({ setFetchAllData, fetchAllData }) => {
   const { user } = ChatState();
@@ -112,6 +113,10 @@ const CreateGroup = ({ setFetchAllData, fetchAllData }) => {
         },
         config
       );
+
+      selectedUsers.forEach((user) => {
+        socket.emit("addUser", user._id);
+      });
 
       setSearchResult(data);
       setFetchAllData(!fetchAllData);

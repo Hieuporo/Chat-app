@@ -46,11 +46,12 @@ const MyChats = ({ fetchAllData, setFetchAllData }) => {
   useEffect(() => {
     getListChat();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchAllData]);
+  }, [fetchAllData, fetchFriendList]);
 
   useEffect(() => {
     socket.on("fetchChats", () => {
       getListChat();
+      setSelectedChat();
     });
     socket.on("online", (id) => {
       socket.emit("isOnline", id);

@@ -4,6 +4,7 @@ require("express-async-errors");
 const dotenv = require("dotenv");
 dotenv.config();
 const connectDB = require("./db/connect");
+const cookieParser = require("cookie-parser");
 const { notFoundMiddleware } = require("./middlewares/not-found");
 const { errorHandlerMiddleware } = require("./middlewares/error-handler");
 const authRoutes = require("./routes/authRoutes");
@@ -14,8 +15,8 @@ const messageRoutes = require("./routes/messageRoutes");
 const { newMessage } = require("./controllers/messageControler");
 
 const app = express();
-
-app.use(express.json());
+app.use(express.json({ limit: "10kb" }));
+app.use(cookieParser());
 
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));

@@ -50,3 +50,31 @@ module.exports.login = async (req, res) => {
     throw new UnAuthenticatedError("Wrong email or password. Please try again");
   }
 };
+
+module.exports.changePassword = async (req, res) => {
+  const { password, newPassword } = req.body;
+
+  const { email } = req.user;
+
+  if (!password || !newPassword) {
+    throw new BadRequestError("Please provide all fields");
+  }
+
+  const user = await User.findOne({ email }).select("+password");
+
+  if (!(await user.correctPassword(password))) {
+    throw new UnAuthenticatedError("Password is not right");
+  }
+
+  user.password = newPassword;
+
+  await user.save();
+
+  res.status(StatusCodes.OK).json({
+    name: user.name,
+    email: user.email,
+    token: user.getToken(),
+    _id: user._id,
+    avatar: user.avatar,
+  });
+};

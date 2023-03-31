@@ -6,9 +6,11 @@ import { ChatState } from "../context/ChatProvider";
 import socket from "./../config/socket";
 
 const ListFriend = () => {
-  const { friendList, setFriendList, fetchFriendList } = ChatState();
-
   const {
+    friendList,
+    setFriendList,
+    fetchFriendList,
+    setFetchFriendList,
     user,
     setSelectedChat,
     selectedChat,
@@ -57,7 +59,7 @@ const ListFriend = () => {
   useEffect(() => {
     getAllfriends();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedChat, fetchFriendList]);
+  }, [selectedChat, fetchFriendList, chats]);
 
   useEffect(() => {
     socket.on("isOnline", (id) => {

@@ -25,16 +25,16 @@ const ChatBox = ({
   const [chatData, setChatData] = useState([]);
   const [newMessage, setNewMessage] = useState();
 
-  useEffect(() => {
-    socket.emit("setup", user);
-    socket.on("connected", () => console.log("connected"));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // useEffect(() => {
+  //   socket.emit("setup", user);
+  //   socket.on("connected", () => console.log("connected"));
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
 
-    return () => {
-      console.log("ngat ket noi");
-      socket.disconnect();
-    };
-  }, [user]);
+  //   return () => {
+  //     console.log("ngat ket noi");
+  //     socket.disconnect();
+  //   };
+  // }, [user]);
 
   const fetchChatData = async () => {
     try {

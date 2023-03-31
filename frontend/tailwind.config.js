@@ -13,6 +13,7 @@ module.exports = {
         wf: "calc(100% - 32px)",
         wd: "calc(100% - 801px)",
         ws: "calc(100% - 351px)",
+        wl: "calc(100% - 417px)",
       },
     },
   },
