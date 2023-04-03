@@ -3,7 +3,7 @@ import MyChats from "../components/MyChats";
 import SingleChat from "../components/SingleChat";
 import NavigationBar from "../components/NavigationBar";
 import { ChatState } from "../context/ChatProvider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ListFriend from "../components/ListFriend";
 import UserSetting from "../components/UserSetting";
 

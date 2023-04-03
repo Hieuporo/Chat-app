@@ -30,6 +30,7 @@ const ChatProvider = ({ children }) => {
     } else {
       navigate("/");
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchUserData]);
 
@@ -72,23 +73,19 @@ const ChatProvider = ({ children }) => {
   useEffect(() => {
     if (user) {
       fetchInvite();
-    }
-  }, [user, fetchInviteList]);
-
-  useEffect(() => {
-    if (user) {
       fetchRequest();
     }
-  }, [user, fetchRequestList]);
+  }, [user, fetchInviteList, fetchRequestList]);
 
   useEffect(() => {
     if (user) {
+      console.log(socket.connected);
       socket.emit("setup", user);
       socket.on("connected", () => console.log("connected"));
       // eslint-disable-next-line react-hooks/exhaustive-deps
 
       return () => {
-        console.log("ngat ket noi");
+        console.log("disconnect");
         socket.disconnect();
       };
     }

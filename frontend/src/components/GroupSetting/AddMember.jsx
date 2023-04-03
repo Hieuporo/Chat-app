@@ -11,7 +11,13 @@ const AddMember = () => {
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState([]);
 
-  const { selectedChat, setSelectedChat, user } = ChatState();
+  const {
+    selectedChat,
+    setSelectedChat,
+    user,
+    setFetchFriendList,
+    fetchFriendList,
+  } = ChatState();
   const [open, setOpen] = useState(false);
 
   const showModal = () => {
@@ -64,6 +70,10 @@ const AddMember = () => {
         config
       );
       socket.emit("addUser", userInfo._id);
+      data.users.forEach((user) =>
+        socket.emit("fetchGroup", { id: user._id, chat: data })
+      );
+      setFetchFriendList(!fetchFriendList);
       setSelectedChat(data);
       // out modal
       handleCancel();

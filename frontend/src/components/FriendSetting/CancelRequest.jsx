@@ -28,11 +28,12 @@ const CancelRequest = ({ request }) => {
     };
 
     try {
-      const { data } = await axios.delete(
+      await axios.delete(
         `/api/v1/friend/invite/delelteRequest/${request._id}`,
         config
       );
 
+      socket.emit("fetchInvites", request.receiverId._id);
       setFetchRequestList(!fetchRequestList);
     } catch (error) {
       notification.error({
@@ -59,7 +60,9 @@ const CancelRequest = ({ request }) => {
         <div>
           <h1 className="text-2xl text-center">Remove friend request</h1>
           <div className="flex justify-evenly mt-10">
-            <Button className="w-36 h-10">No</Button>
+            <Button className="w-36 h-10" onClick={handleCancel}>
+              No
+            </Button>
             <Button
               type="primary"
               className="w-36 h-10"

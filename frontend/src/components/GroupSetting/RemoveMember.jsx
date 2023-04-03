@@ -53,7 +53,9 @@ const RemoveMember = () => {
       );
 
       socket.emit("removeUser", userInfo._id);
-      data.users.forEach((user) => socket.emit("fetchChats", user._id));
+      data.users.forEach((user) =>
+        socket.emit("fetchGroup", { id: user._id, chat: data })
+      );
       setFetchFriendList(!fetchFriendList);
       setSelectedChat(data);
       handleCancel();

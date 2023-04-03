@@ -3,19 +3,12 @@ import axios from "axios";
 import React, { useState } from "react";
 import socket from "../../config/socket";
 import { ChatState } from "../../context/ChatProvider";
-import AddMember from "../GroupSetting/AddMember";
 import { AddUserIcon } from "../Icons";
 
 const AddFriend = ({ receiverId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const {
-    user,
-    setFetchFriendList,
-    fetchFriendList,
-    fetchRequestList,
-    setFetchRequestList,
-  } = ChatState();
+  const { user, fetchRequestList, setFetchRequestList } = ChatState();
 
   const showModal = () => {
     setIsModalOpen(true);

@@ -66,9 +66,8 @@ const InviteFriend = ({ invite }) => {
       );
 
       socket.emit("fetchFriend", invite.senderId._id);
-      socket.emit("fetchInvites", invite.senderId._id);
+      socket.emit("fetchRequests", invite.senderId._id);
       setFetchInviteList(!fetchInviteList);
-      setFetchRequestList(!fetchRequestList);
       setFetchFriendList(!fetchFriendList);
     } catch (error) {
       notification.error({

@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Form, Input, Button, notification } from "antd";
 import axios from "axios";
 import { ChatState } from "../../context/ChatProvider";
+import socket from "../../config/socket";
 
 const PasswordChange = () => {
-  const { user, fetchUserData, setFetchUserData } = ChatState();
+  const { user, setUser, fetchUserData, setFetchUserData } = ChatState();
 
   const [password, setPassword] = useState();
   const [newPassword, setNewPassword] = useState();
@@ -23,14 +24,20 @@ const PasswordChange = () => {
         },
         config
       );
-
+      setUser(data);
+      socket.connect();
       localStorage.setItem("userInfo", JSON.stringify(data));
-      setFetchUserData(!fetchUserData);
       notification.success({
-        message: "Updated Successfully!",
+        message: "Updated Successfully! Reloading Page...",
       });
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (error) {
-      console.log(error);
+      notification.error({
+        message: "Password incorrect",
+      });
     }
   };
 
@@ -48,7 +55,7 @@ const PasswordChange = () => {
               value={password}
             />
           </Form.Item>
-          <Form.Item label="Password confirm" name="Confirm Password">
+          <Form.Item label="New Password" name="New Password">
             <Input
               type="password"
               className="max-w-[460px]"

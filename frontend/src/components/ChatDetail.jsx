@@ -11,37 +11,22 @@ import {
 } from "../config/handleLogic";
 import { ChatState } from "../context/ChatProvider";
 import DetailItem from "./DetailItem";
-import {
-  DocumentIcon,
-  LeaveGroupIcon,
-  PhotoIcon,
-  RemoveUserIcon,
-} from "./Icons";
+import { LeaveGroupIcon } from "./Icons";
 
 import UserItem from "./UserItem";
 import ChangeChatName from "./GroupSetting/ChangeChatName";
 import ChangePhoto from "./GroupSetting/ChangePhoto";
 import AddMember from "./GroupSetting/AddMember";
 import RemoveMember from "./GroupSetting/RemoveMember";
-import axios from "axios";
-import socket from "../config/socket";
 import IsFriend from "./FriendSetting/IsFriend";
 import AddFriend from "./FriendSetting/AddFriend";
 import InviteFriend from "./FriendSetting/InviteFriend";
 import CancelRequest from "./FriendSetting/CancelRequest";
+import ImageList from "./ImageList";
 
 const ChatDetail = ({ showChatDetail, fetchAllData, setFetchAllData }) => {
-  const {
-    user,
-    selectedChat,
-    setSelectedChat,
-    invites,
-    requests,
-    setInvites,
-    setFetchFriendList,
-    fetchFriendList,
-    friendList,
-  } = ChatState();
+  const { user, selectedChat, setSelectedChat, invites, requests, friendList } =
+    ChatState();
 
   useEffect(() => {}, [selectedChat]);
 
@@ -168,12 +153,11 @@ const ChatDetail = ({ showChatDetail, fetchAllData, setFetchAllData }) => {
             </Collapse.Panel>
           )}
           <Collapse.Panel
-            header="Media files"
+            header="Media"
             className="text-base font-semibold"
             key="4"
           >
-            <DetailItem icon={<PhotoIcon />} isFirst={true} title="Media" />
-            <DetailItem icon={<DocumentIcon />} title="Files" />
+            <ImageList />
           </Collapse.Panel>
         </Collapse>
         {selectedChat.isGroupChat && (

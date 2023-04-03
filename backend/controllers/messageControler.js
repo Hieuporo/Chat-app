@@ -15,6 +15,7 @@ module.exports.newMessage = async (req, res) => {
     sender: req.user._id,
     content,
     chat: chatId,
+    type,
   });
 
   message = await message.populate("sender", "name avatar");
@@ -38,6 +39,16 @@ module.exports.allMessages = async (req, res) => {
     .populate("sender")
     .populate("chat")
     .sort({ createdAt: 1 });
+
+  res.status(StatusCodes.OK).json(messages);
+};
+
+module.exports.allImages = async (req, res) => {
+  const { chatId } = req.params;
+
+  let messages = await Message.find({ chat: chatId, type: "img" })
+    .populate("chat")
+    .sort({ createdAt: -1 });
 
   res.status(StatusCodes.OK).json(messages);
 };

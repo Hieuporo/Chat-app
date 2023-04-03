@@ -1,4 +1,4 @@
-import { Avatar } from "antd";
+import { Avatar, Badge } from "antd";
 import axios from "axios";
 import React, { useEffect } from "react";
 import { ChatState } from "../context/ChatProvider";
@@ -20,6 +20,7 @@ const MyChats = ({ fetchAllData, setFetchAllData }) => {
     setFetchInviteList,
     fetchRequestList,
     setFetchRequestList,
+    friendOnline,
   } = ChatState();
 
   const getListChat = async () => {
@@ -46,13 +47,18 @@ const MyChats = ({ fetchAllData, setFetchAllData }) => {
   useEffect(() => {
     getListChat();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchAllData, fetchFriendList]);
+  }, [fetchAllData, fetchFriendList, friendOnline]);
 
   useEffect(() => {
     socket.on("fetchChats", () => {
       getListChat();
       setSelectedChat();
     });
+
+    socket.on("fetchGroupChat", (data) => {
+      setSelectedChat(data);
+    });
+
     socket.on("online", (id) => {
       socket.emit("isOnline", id);
     });
@@ -60,10 +66,10 @@ const MyChats = ({ fetchAllData, setFetchAllData }) => {
       setFetchFriendList(!fetchFriendList);
     });
     socket.on("fetchRequestList", () => {
-      setFetchInviteList(!fetchInviteList);
+      setFetchRequestList(!fetchRequestList);
     });
     socket.on("fetchInviteList", () => {
-      setFetchRequestList(!fetchRequestList);
+      setFetchInviteList(!fetchInviteList);
     });
   });
 
@@ -87,8 +93,38 @@ const MyChats = ({ fetchAllData, setFetchAllData }) => {
                   key={key}
                   onClick={() => handleChat(chat)}
                 >
+                  {/* <Avatar src={chat.chatAvatar} className="w-14 h-14" /> */}
                   {chat.isGroupChat ? (
-                    <Avatar src={chat.chatAvatar} className="w-14 h-14" />
+                    chat.isGroupChat &&
+                    chat.users.some((user) =>
+                      friendOnline.includes(user._id)
+                    ) ? (
+                      <Badge
+                        count={" "}
+                        size="small"
+                        offset={[-10, 47]}
+                        color="green"
+                      >
+                        <Avatar src={chat.chatAvatar} className="w-14 h-14" />
+                      </Badge>
+                    ) : (
+                      <Avatar src={chat.chatAvatar} className="w-14 h-14" />
+                    )
+                  ) : !chat.isGroupChat &&
+                    friendOnline.includes(
+                      getSenderFull(user, chat.users)._id
+                    ) ? (
+                    <Badge
+                      count={" "}
+                      size="small"
+                      offset={[-10, 47]}
+                      color="green"
+                    >
+                      <Avatar
+                        src={getSenderFull(user, chat.users).avatar}
+                        className="w-14 h-14"
+                      />
+                    </Badge>
                   ) : (
                     <Avatar
                       src={getSenderFull(user, chat.users).avatar}
@@ -105,7 +141,13 @@ const MyChats = ({ fetchAllData, setFetchAllData }) => {
                     )}
 
                     <div className="text-gray-600">
-                      {chat.latestMessage && chat.latestMessage.content}
+                      {chat.latestMessage &&
+                        chat.latestMessage.type === "text" &&
+                        chat.latestMessage.content}
+                      {chat.latestMessage &&
+                        chat.latestMessage.type === "img" &&
+                        chat.latestMessage.content &&
+                        "Image"}
                     </div>
                   </div>
                 </div>

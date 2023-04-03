@@ -3,18 +3,21 @@ import { Form, Input, Upload, Button, notification } from "antd";
 import { ChatState } from "../../context/ChatProvider";
 import { PhotoIconBig } from "../Icons";
 import axios from "axios";
+import socket from "../../config/socket";
+import { useNavigate } from "react-router-dom";
 
 const Infomation = () => {
-  const { user, fetchUserData, setFetchUserData } = ChatState();
+  const { user, setUser, fetchUserData, setFetchUserData } = ChatState();
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
   const [loading, setLoading] = useState(false);
   const [avatar, setAvatar] = useState(user.avatar);
   const [fileList, setFileList] = useState([]);
 
+  const navigate = useNavigate();
+
   const handleAvatar = (file) => {
     const pics = file.file;
-
     if (pics.status === "removed") {
       return;
     }
@@ -66,10 +69,14 @@ const Infomation = () => {
       );
 
       localStorage.setItem("userInfo", JSON.stringify(data));
-      setFetchUserData(!fetchUserData);
+
       notification.success({
-        message: "Updated Successfully!",
+        message: "Updated Successfully! Reloading Page...",
       });
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (error) {
       console.log(error);
     }

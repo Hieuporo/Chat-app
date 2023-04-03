@@ -27,6 +27,10 @@ const Header = () => {
     setInvites,
     fetchFriendList,
     setFetchFriendList,
+    setSelectedChat,
+    setNotify,
+    setFetchInviteList,
+    fetchInviteList,
   } = ChatState();
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -80,20 +84,31 @@ const Header = () => {
     },
   ];
 
+  const handleNoti = (chat) => {
+    const newNotify = notify.filter((noti) => noti.chat._id !== chat._id);
+    setNotify(newNotify);
+    setSelectedChat(chat);
+  };
+
   const content = (
-    <List
-      dataSource={notify}
-      renderItem={(notify) => (
-        <List.Item>
-          <div className="font-semibold">
-            You have a new message from{" "}
-            {notify.chat.isGroupChat
-              ? notify.chat.chatName
-              : getSender(user, notify.chat.users)}
-          </div>
-        </List.Item>
-      )}
-    />
+    <div className="w-80">
+      <List
+        dataSource={notify}
+        renderItem={(noti) => (
+          <List.Item>
+            <div
+              className="font-semibold px-4 py-2 hover:opacity-80 cursor-pointer text-base"
+              onClick={() => handleNoti(noti.chat)}
+            >
+              You have a new message from{" "}
+              {noti.chat.isGroupChat
+                ? noti.chat.chatName
+                : getSender(user, noti.chat.users)}
+            </div>
+          </List.Item>
+        )}
+      />
+    </div>
   );
 
   const listRequest = (
@@ -150,7 +165,8 @@ const Header = () => {
       );
 
       socket.emit("fetchFriend", invite.senderId._id);
-      setInvites(invites.filter((inv) => inv._id !== invite._id));
+      socket.emit("fetchRequests", invite.senderId._id);
+      setFetchInviteList(!fetchInviteList);
       setFetchFriendList(!fetchFriendList);
     } catch (error) {
       notification.error({
@@ -167,11 +183,12 @@ const Header = () => {
     };
 
     try {
-      const { data } = await axios.delete(
+      await axios.delete(
         `/api/v1/friend/invite/delelteRequest/${invite._id}`,
         config
       );
 
+      socket.emit("fetchRequests", invite.senderId._id);
       setInvites(invites.filter((inv) => inv._id !== invite._id));
     } catch (error) {
       notification.error({
@@ -241,9 +258,9 @@ const Header = () => {
         </Popover>
         <Popover
           content={content}
-          title="Notifications"
+          title={<h1 className="text-lg font-medium">Notifications</h1>}
           trigger="click"
-          className="ml-8 mr-6"
+          className="ml-8 mr-6 text-2xl"
         >
           <Badge count={notify.length}>
             <svg

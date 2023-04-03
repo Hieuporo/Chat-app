@@ -46,7 +46,7 @@ module.exports.getChats = async (req, res) => {
     users: { $elemMatch: { $eq: req.user._id } },
   })
     .populate("users", "name avatar email")
-    .populate("latestMessage", "sender content")
+    .populate("latestMessage", "sender content type")
     .sort({ updatedAt: -1 });
 
   res.status(StatusCodes.OK).json(chats);

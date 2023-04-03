@@ -88,6 +88,10 @@ io.on("connection", (socket) => {
     socket.in(id).emit("fetchChats");
   });
 
+  socket.on("fetchGroup", (data) => {
+    socket.in(data.id).emit("fetchGroupChat", data.chat);
+  });
+
   socket.on("fetchFriend", (id) => {
     socket.in(id).emit("fetchFriendList");
   });

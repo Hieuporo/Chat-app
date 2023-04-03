@@ -51,8 +51,6 @@ export const inThisList = (user, invites) => {
     return invite.senderId._id === user._id;
   });
 
-  console.log(result);
-
   return result ? true : false;
 };
 

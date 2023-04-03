@@ -38,5 +38,11 @@ module.exports.changeInformation = async (req, res) => {
     { new: true }
   );
 
-  res.status(StatusCodes.OK).json(user);
+  res.status(StatusCodes.OK).json({
+    name: user.name,
+    email: user.email,
+    token: user.getToken(),
+    _id: user._id,
+    avatar: user.avatar,
+  });
 };

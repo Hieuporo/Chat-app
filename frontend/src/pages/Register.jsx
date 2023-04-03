@@ -2,7 +2,17 @@ import React from "react";
 import { Tabs } from "antd";
 import Login from "../components/Login";
 import Signup from "../components/Signup";
+import { ChatState } from "../context/ChatProvider";
+import { useNavigate } from "react-router-dom";
 const Register = () => {
+  const { user } = ChatState();
+
+  const navigate = useNavigate();
+
+  if (user) {
+    navigate("/home");
+  }
+
   const items = [
     {
       key: "1",
