@@ -8,6 +8,7 @@ const {
   removeFormGroup,
   addToGroup,
   changeGroupAvatar,
+  leaveGroup,
 } = require("../controllers/chatController");
 
 const router = express.Router();
@@ -21,4 +22,5 @@ router.route("/rename").patch(renameGroup);
 router.route("/removeMember").patch(removeFormGroup);
 router.route("/addMember").patch(addToGroup);
 router.route("/changeAvatar").patch(changeGroupAvatar);
+router.route("/leaveGroup").patch(leaveGroup);
 module.exports = router;

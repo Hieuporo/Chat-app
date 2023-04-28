@@ -9,11 +9,12 @@ const ModalItem = ({
   showModal,
   handleCancel,
   open,
+  isLeave,
 }) => {
   return (
     <div>
       <div onClick={showModal}>
-        <DetailItem icon={icon} title={title} />
+        <DetailItem icon={icon} title={title} isLeave />
       </div>
       <Modal
         style={{ top: 200 }}

@@ -10,8 +10,6 @@ import {
   inThisRequests,
 } from "../config/handleLogic";
 import { ChatState } from "../context/ChatProvider";
-import DetailItem from "./DetailItem";
-import { LeaveGroupIcon } from "./Icons";
 
 import UserItem from "./UserItem";
 import ChangeChatName from "./GroupSetting/ChangeChatName";
@@ -23,8 +21,14 @@ import AddFriend from "./FriendSetting/AddFriend";
 import InviteFriend from "./FriendSetting/InviteFriend";
 import CancelRequest from "./FriendSetting/CancelRequest";
 import ImageList from "./ImageList";
+import LeaveGroup from "./GroupSetting/LeaveGroup";
 
-const ChatDetail = ({ showChatDetail, fetchAllData, setFetchAllData }) => {
+const ChatDetail = ({
+  showChatDetail,
+  fetchAllData,
+  setFetchAllData,
+  setShowChatDetail,
+}) => {
   const { user, selectedChat, setSelectedChat, invites, requests, friendList } =
     ChatState();
 
@@ -144,25 +148,41 @@ const ChatDetail = ({ showChatDetail, fetchAllData, setFetchAllData }) => {
             </Collapse.Panel>
           )}
           {selectedChat.isGroupChat && (
+            <>
+              <Collapse.Panel
+                header="Chat members"
+                className="text-base font-semibold"
+                key="3"
+              >
+                <UserItem />
+              </Collapse.Panel>
+              <Collapse.Panel
+                header="Media"
+                className="text-base font-semibold"
+                key="4"
+              >
+                <ImageList />
+              </Collapse.Panel>
+            </>
+          )}
+          {!selectedChat.isGroupChat && (
             <Collapse.Panel
-              header="Chat members"
+              header="Media"
               className="text-base font-semibold"
-              key="3"
+              key="1"
             >
-              <UserItem />
+              <ImageList />
             </Collapse.Panel>
           )}
-          <Collapse.Panel
-            header="Media"
-            className="text-base font-semibold"
-            key="4"
-          >
-            <ImageList />
-          </Collapse.Panel>
+          {selectedChat.isGroupChat && (
+            <LeaveGroup
+              fetchAllData={fetchAllData}
+              setFetchAllData={setFetchAllData}
+              showChatDetail={showChatDetail}
+              setShowChatDetail={setShowChatDetail}
+            />
+          )}
         </Collapse>
-        {selectedChat.isGroupChat && (
-          <DetailItem icon={<LeaveGroupIcon />} title="Leave group" isLeave />
-        )}
       </div>
     </div>
   );

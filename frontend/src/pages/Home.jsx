@@ -6,6 +6,7 @@ import { ChatState } from "../context/ChatProvider";
 import { useEffect, useState } from "react";
 import ListFriend from "../components/ListFriend";
 import UserSetting from "../components/UserSetting";
+import socket from "../config/socket";
 
 const Home = () => {
   const { user } = ChatState();

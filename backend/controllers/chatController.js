@@ -200,3 +200,38 @@ module.exports.addToGroup = async (req, res) => {
 
   res.status(StatusCodes.OK).json(chat);
 };
+
+// leave group
+
+module.exports.leaveGroup = async (req, res) => {
+  const userId = req.user.id;
+  const { chatId } = req.body;
+
+  if (!userId || !chatId) {
+    throw new BadRequestError("Please provide all fields");
+  }
+
+  const chat = await Chat.findOne({ _id: chatId }).populate(
+    "users",
+    "name avatar email"
+  );
+
+  // check current user is in group
+  const filterUser = chat.users.filter((user) =>
+    user._id.equals(new mongoose.Types.ObjectId(userId))
+  );
+
+  if (filterUser.length === 0) {
+    throw new BadRequestError("You is not in this group");
+  }
+
+  const users = chat.users.filter(
+    (user) => !user._id.equals(new mongoose.Types.ObjectId(userId))
+  );
+
+  chat.users = users;
+  chat.save();
+
+  res.statusCode = 200;
+  res.send("Success");
+};

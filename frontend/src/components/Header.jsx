@@ -200,7 +200,7 @@ const Header = () => {
   useEffect(() => {}, [notify]);
 
   return (
-    <div className="h-14 w-screen flex justify-between shadow-xl">
+    <div className="h-14 w-screen flex justify-between">
       <div className="w-14 h-14 flex items-center justify-center hover:text-gray-500 cursor-pointer">
         <Button onClick={showDrawer} className="border-none">
           <svg

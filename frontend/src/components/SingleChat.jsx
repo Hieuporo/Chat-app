@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ChatBox from "./ChatBox";
 import ChatDetail from "./ChatDetail";
 
 const SingleChat = ({ fetchAllData, setFetchAllData }) => {
   const [showChatDetail, setShowChatDetail] = useState(false);
+
   return (
     <>
       <div
@@ -19,6 +20,7 @@ const SingleChat = ({ fetchAllData, setFetchAllData }) => {
           fetchAllData={fetchAllData}
           setFetchAllData={setFetchAllData}
           showChatDetail={showChatDetail}
+          setShowChatDetail={setShowChatDetail}
         />
       </div>
     </>

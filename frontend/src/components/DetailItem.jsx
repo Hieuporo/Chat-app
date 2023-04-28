@@ -5,7 +5,7 @@ const DetailItem = ({ icon, title, isFirst, isLeave }) => {
     return (
       <div className="flex pb-3">
         <div>{icon}</div>
-        <h3 className="ml-4">{title}</h3>
+        <h3 className="ml-4 font-semibold cursor-pointer">{title}</h3>
       </div>
     );
   }
@@ -14,7 +14,7 @@ const DetailItem = ({ icon, title, isFirst, isLeave }) => {
     return (
       <div className="flex pb-3 pt-2 ml-3">
         <div>{icon}</div>
-        <h3 className="ml-4 font-semibold cursor-pointer">{title}</h3>
+        <h3 className="ml-4 text-base font-semibold cursor-pointer">{title}</h3>
       </div>
     );
   }

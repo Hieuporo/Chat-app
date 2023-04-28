@@ -103,4 +103,8 @@ io.on("connection", (socket) => {
   socket.on("fetchInvites", (id) => {
     socket.in(id).emit("fetchInviteList");
   });
+
+  socket.on("fetchChatAfterRename", (id) => {
+    io.emit("fetchChatBox");
+  });
 });

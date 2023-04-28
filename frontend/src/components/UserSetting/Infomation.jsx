@@ -68,6 +68,8 @@ const Infomation = () => {
         config
       );
 
+      socket.emit("fetchChatAfterRename", user.id);
+
       localStorage.setItem("userInfo", JSON.stringify(data));
 
       notification.success({
